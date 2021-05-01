@@ -3,7 +3,20 @@ from time import sleep
 
 drone = tello.Tello()
 drone.connect()
-print("Battery Status: "+drone.get_battery())
-print("Current WIFI: "+drone.get_wifi())
-print("Current Speed: "+drone.get_speed())
-print("Flight time is: "+drone.get_flight_time())
+percentage_sign = chr(37)
+print("Battery Status: " + drone.get_battery() + "" + percentage_sign)
+
+drone.takeoff()
+drone.send_rc_control(0, 50, 0, 0)
+# sleep(2)
+# drone.send_rc_control(50, 0, 0, 0)
+# sleep(2)
+# drone.send_rc_control(0, 0, 0, 30)
+sleep(2)
+drone.send_rc_control(0, 0, 0, 0)
+drone.land()
+
+
+# print("Current Speed: "+drone.get_speed())
+# print("Flight time is: "+drone.get_flight_time())
+# print("Temperature : "+drone.get_temperature())
