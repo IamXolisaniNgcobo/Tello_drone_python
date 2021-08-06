@@ -4,7 +4,7 @@ from time import sleep
 drone = tello.Tello()
 drone.connect()
 percentage_sign = chr(37)
-print(drone.get_battery(), percentage_sign)
+print('battery : ',drone.get_battery())
 
 drone.takeoff()
 drone.send_rc_control(0, 50, 0, 0)

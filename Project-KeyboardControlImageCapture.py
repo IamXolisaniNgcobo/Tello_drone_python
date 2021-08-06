@@ -1,12 +1,16 @@
 from djitellopy import tello
 import keyPressModule as kp
-from time import sleep
+import time
+import cv2
 
 kp.init()
 
 drone = tello.Tello()
 drone.connect()
 print(drone.get_battery() + " percent")
+global drone_image
+
+drone.streamon()
 
 def get_keyboard_input():
     left_right, forward_backward, up_down, yo_velocity = 0, 0, 0, 0
@@ -42,10 +46,17 @@ def get_keyboard_input():
     if kp.getKey('x'):
         drone.land()
 
+    if kp.getKey('z'):
+        cv2.imwrite(f'Resources/Images/{time.time()}.jpg', drone_image)
+        time.sleep(0.3)
+
     return [left_right, forward_backward, up_down, yo_velocity]
 
 
 while True:
     rc_control_values = get_keyboard_input()
     drone.send_rc_control(rc_control_values[0], rc_control_values[1], rc_control_values[2], rc_control_values[3])
-    sleep(0.05)
+    drone_image = drone.get_frame_read().frame
+    drone_image = cv2.resize(drone_image, (360, 240))
+    cv2.imshow("Live Drone Image", drone_image)
+    cv2.waitKey(1)
